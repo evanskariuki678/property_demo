@@ -25,7 +25,7 @@ export default function Settings() {
     setSaving(true);
     setMessage('');
     try {
-      await api.put('/api/auth/profile', profile);
+      await api.put('/api/auth/me', profile);
       await refreshUser();
       setMessage('Profile updated successfully');
     } catch {

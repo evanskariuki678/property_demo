@@ -113,6 +113,9 @@ async def get_dashboard(
     )
     if is_tenant:
         overdue_q = overdue_q.where(Payment.paid_by == current_user.id)
+    elif not is_admin:
+        lease_ids_sq = _get_lease_ids_subquery(current_user).subquery()
+        overdue_q = overdue_q.where(Payment.lease_id.in_(select(lease_ids_sq)))
     overdue_payments = (await db.execute(overdue_q)).scalar() or 0
 
     # Active leases
@@ -150,11 +153,16 @@ async def get_dashboard(
     # Monthly revenue (last 6 months)
     monthly_revenue = []
     for i in range(5, -1, -1):
-        month_start = (today.replace(day=1) - timedelta(days=30 * i)).replace(day=1)
+        m = today.month - i
+        y = today.year
+        while m <= 0:
+            m += 12
+            y -= 1
+        month_start = date(y, m, 1)
         if month_start.month == 12:
-            month_end = month_start.replace(year=month_start.year + 1, month=1)
+            month_end = date(month_start.year + 1, 1, 1)
         else:
-            month_end = month_start.replace(month=month_start.month + 1)
+            month_end = date(month_start.year, month_start.month + 1, 1)
 
         mr_q = select(func.coalesce(func.sum(Payment.amount), 0)).select_from(Payment).where(
             Payment.status == PaymentStatus.COMPLETED,

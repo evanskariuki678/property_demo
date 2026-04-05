@@ -24,7 +24,7 @@ export default function Payments() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mpesaDialog, setMpesaDialog] = useState(false);
-  const [mpesaForm, setMpesaForm] = useState({ phone: '', amount: 0, lease_id: '' });
+  const [mpesaForm, setMpesaForm] = useState({ phone_number: '', amount: 0, lease_id: '' });
   const [mpesaLoading, setMpesaLoading] = useState(false);
   const [mpesaResult, setMpesaResult] = useState('');
   const [form, setForm] = useState({
@@ -197,7 +197,7 @@ export default function Payments() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2"><Label>Phone Number (254...)</Label><Input value={mpesaForm.phone} onChange={(e) => setMpesaForm({ ...mpesaForm, phone: e.target.value })} placeholder="254700000000" /></div>
+            <div className="space-y-2"><Label>Phone Number (254...)</Label><Input value={mpesaForm.phone_number} onChange={(e) => setMpesaForm({ ...mpesaForm, phone_number: e.target.value })} placeholder="254700000000" /></div>
             <div className="space-y-2"><Label>Amount (KES)</Label><Input type="number" value={mpesaForm.amount} onChange={(e) => setMpesaForm({ ...mpesaForm, amount: Number(e.target.value) })} /></div>
             {mpesaResult && (
               <div className={`p-3 rounded-md text-sm ${mpesaResult.includes('fail') || mpesaResult.includes('error') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>

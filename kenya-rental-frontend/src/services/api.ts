@@ -95,7 +95,7 @@ export const deleteExpense = (id: string) => api.delete(`/api/expenses/${id}`);
 export const getTenants = () => api.get('/api/auth/users?role=tenant');
 
 // M-Pesa
-export const initiateStkPush = (data: { phone: string; amount: number; lease_id: string }) =>
+export const initiateStkPush = (data: { phone_number: string; amount: number; lease_id: string }) =>
   api.post('/api/mpesa/stk-push', data);
 
 export default api;

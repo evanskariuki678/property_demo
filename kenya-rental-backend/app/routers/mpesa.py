@@ -219,10 +219,12 @@ async def c2b_confirmation(request: Request, db: AsyncSession = Depends(get_db))
         else:
             # Create a new payment record for unmatched C2B
             # Try to find lease by reference
-            lease_result = await db.execute(
-                select(Lease).where(Lease.id.like(f"%{bill_ref}%"))
-            )
-            lease = lease_result.scalar_one_or_none()
+            lease = None
+            if bill_ref:
+                lease_result = await db.execute(
+                    select(Lease).where(Lease.id.like(f"%{bill_ref}%"))
+                )
+                lease = lease_result.scalars().first()
 
             if lease:
                 new_payment = Payment(
